@@ -37,6 +37,20 @@ function draw() {
   all_particles.update();
 }
 
+function mousePressed() {
+  if (all_particles.count < max_particles) {
+    all_particles.addParticle(createVector(mouseX, mouseY));
+  }
+}
+
+function deviceShaken() {
+  all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+  all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+  all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+  all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+  all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+}
+
 function mouseDragged() {
   if (all_particles.count < max_particles) {
     all_particles.addParticle(createVector(mouseX, mouseY));
