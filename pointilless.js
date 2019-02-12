@@ -1,11 +1,11 @@
 var max_speed = 3;
 var bounce = -0.5;
 var life_dec = 2.0;
-var shrink_rate = 0.5;
+var shrink_rate
 var max_particles = 100;
 var all_particles = new particleSystem();
 var button;
-let scale = 10
+let scale;
 
 let imgg,       //imag     //resized image of the image (visible)
     imageRatio;     //ratio of the image h/w
@@ -17,14 +17,15 @@ function preload() {
 
 function setup() {
   scale =windowHeight/ imgg.height
+  shrink_rate = windowHeight/300;
   canvas = createCanvas(imgg.width*scale, imgg.height*scale);
   canvas.parent("sketch");
   background(0);
   imageMode(CENTER);
   noStroke();
-  pixelDensity(1);
   background(255);
   imgg.loadPixels();
+  //let all_particles = new particleSystem();
 
   // button = createButton('click me');
   // // put button in same container as the canvas
@@ -34,6 +35,7 @@ function setup() {
 
 }
 function draw() {
+  //all_particles = new particleSystem();
   all_particles.update();
 }
 
@@ -44,11 +46,12 @@ function mousePressed() {
 }
 
 function deviceShaken() {
+  if (all_particles.count < max_particles) {
   all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
   all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
   all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
-  all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
-  all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+  }//all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+  //all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
 }
 
 function mouseDragged() {
@@ -83,7 +86,7 @@ function particleSystem() {
 class Particle {
   constructor(location) {
     this.location = createVector(location.x, location.y);
-    this.size = 20;
+    this.size = windowHeight/20;
     this.velocity = createVector(0, 0);
     this.acc = createVector(0, 0);
     this.angle = 0.0
@@ -120,7 +123,7 @@ class Particle {
   }
 
   isDead() {
-    if (this.size < 6 ) {
+    if (this.size < 0 ) {
       return true;
     } else {
       return false;
