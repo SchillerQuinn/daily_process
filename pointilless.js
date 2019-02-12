@@ -1,4 +1,4 @@
-var max_speed = 4;
+var max_speed = 3;
 var bounce = -0.5;
 var life_dec = 2.0;
 var shrink_rate = 0.5;
@@ -83,7 +83,7 @@ function particleSystem() {
 class Particle {
   constructor(location) {
     this.location = createVector(location.x, location.y);
-    this.size = 50;
+    this.size = 20;
     this.velocity = createVector(0, 0);
     this.acc = createVector(0, 0);
     this.angle = 0.0
