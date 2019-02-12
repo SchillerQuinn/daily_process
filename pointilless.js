@@ -112,7 +112,7 @@ class colorGenerator {
     console.log(loc)
     this.R = red(img.get(loc.x, loc.y))
     this.G = green(img.get(loc, loc.y))
-    this.B = blue(img.get(loc.x, loc.y)
+    this.B = blue(img.get(loc.x, loc.y))
     }
 
     update(loc) {
