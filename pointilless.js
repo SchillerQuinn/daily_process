@@ -1,31 +1,30 @@
 var max_speed = 4;
 var bounce = -0.5;
 var life_dec = 2.0;
-var shrink_rate = 2;
+var shrink_rate = 0.5;
 var max_particles = 100;
 var all_particles = new particleSystem();
 var button;
+let scale = 10
 
-let img;
-let imgDict
+let imgg,       //imag     //resized image of the image (visible)
+    imageRatio;     //ratio of the image h/w
 
 function preload() {
-  img = loadImage('Sarina.jpg');
+    imgg=loadImage("smallSarina3.jpg");
 }
 
 
 function setup() {
-  var canvas = createCanvas(
-    1280,
-    1232
-  );
+  scale =windowHeight/ imgg.height
+  canvas = createCanvas(imgg.width*scale, imgg.height*scale);
   canvas.parent("sketch");
   background(0);
   imageMode(CENTER);
   noStroke();
+  pixelDensity(1);
   background(255);
-  img.loadPixels();
-  imgDict = img.get()
+  imgg.loadPixels();
 
   // button = createButton('click me');
   // // put button in same container as the canvas
@@ -34,7 +33,6 @@ function setup() {
   // button.position(0, 0);
 
 }
-
 function draw() {
   all_particles.update();
 }
@@ -71,7 +69,7 @@ function particleSystem() {
 class Particle {
   constructor(location) {
     this.location = createVector(location.x, location.y);
-    this.size = 1;
+    this.size = 50;
     this.velocity = createVector(0, 0);
     this.acc = createVector(0, 0);
     this.angle = 0.0
@@ -88,18 +86,27 @@ class Particle {
     this.velocity.add(this.acc);
     this.velocity.limit(6);
     this.location.add(this.velocity);
-    this.size += shrink_rate;
+    this.size -= shrink_rate;
   }
 
   display() {
     this.color.update(this.location)
-    fill(this.color.R, this.color.G, this.color.B, 255 - this.size * 5);
-    noStroke();
-    ellipse(this.location.x, this.location.y, this.size);
+    fill(this.color.R, this.color.G, this.color.B, 255 -(this.size)**(1.5) );
+    //fill(this.color.R, this.color.G, this.color.B, 255-this.size*3);
+        this.x1 = this.location.x+Math.cos(this.angle+(2*Math.PI/3))*this.size/2
+        this.y1 = this.location.y+Math.sin(this.angle+(2*Math.PI/3))*this.size/2
+        this.x2 = this.location.x+Math.cos(this.angle+2*(2*Math.PI/3))*this.size/2
+        this.y2 = this.location.y+Math.sin(this.angle+2*(2*Math.PI/3))*this.size/2
+        this.x3 = this.location.x+Math.cos(this.angle)*this.size
+        this.y3 = this.location.y+Math.sin(this.angle)*this.size
+        noStroke();
+        //rotate(this.angle)
+        triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3)
+
   }
 
   isDead() {
-    if (this.size > 50) {
+    if (this.size < 6 ) {
       return true;
     } else {
       return false;
@@ -109,16 +116,14 @@ class Particle {
 
 class colorGenerator {
   constructor(loc) {
-    console.log(loc)
-    this.R = red(img.get(loc.x, loc.y))
-    this.G = green(img.get(loc, loc.y))
-    this.B = blue(img.get(loc.x, loc.y))
+    this.R = red(imgg.get(floor(loc.x/scale), floor(loc.y/scale)))
+    this.G = green(imgg.get(floor(loc.x/scale), floor(loc.y/scale)))
+    this.B = blue(imgg.get(floor(loc.x/scale), floor(loc.y/scale)))
     }
 
     update(loc) {
-      console.log(loc)
-      this.R = red(img.get(loc.x, loc.y))
-      this.G = green(img.get(loc.x, loc.y))
-      this.B = blue(img.get(loc.x, loc.y))
+      this.R = red(imgg.get(floor(loc.x/scale), floor(loc.y/scale)))
+      this.G = green(imgg.get(floor(loc.x/scale), floor(loc.y/scale)))
+      this.B = blue(imgg.get(floor(loc.x/scale), floor(loc.y/scale)))
     }
   }
