@@ -11,7 +11,7 @@ let imgg,       //imag     //resized image of the image (visible)
     imageRatio;     //ratio of the image h/w
 
 function preload() {
-    imgNum = floor(random(1,22))
+    imgNum = floor(random(1,33))
     console.log(imgNum)
     imgg=loadImage(imgNum+".jpg");
 }
