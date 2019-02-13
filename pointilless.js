@@ -65,6 +65,14 @@ function deviceShaken() {
  }
 }
 
+function touchMoved() {
+  if (all_particles.count < max_particles) {
+    all_particles.addParticle(createVector(mouseX, mouseY));
+  }
+  return false;
+}
+
+
 function mouseDragged() {
   if (all_particles.count < max_particles) {
     all_particles.addParticle(createVector(mouseX, mouseY));
@@ -120,13 +128,12 @@ class Particle {
   display() {
     this.color.update(this.location)
     fill(this.color.R, this.color.G, this.color.B, 255-255*(this.size/min(windowHeight/20, windowWidth/20)));
-    //fill(this.color.R, this.color.G, this.color.B, 255-this.size*3);
         this.x1 = this.location.x+Math.cos(this.angle+(2*Math.PI/3))*this.size/2
         this.y1 = this.location.y+Math.sin(this.angle+(2*Math.PI/3))*this.size/2
         this.x2 = this.location.x+Math.cos(this.angle+2*(2*Math.PI/3))*this.size/2
         this.y2 = this.location.y+Math.sin(this.angle+2*(2*Math.PI/3))*this.size/2
-        this.x3 = this.location.x+Math.cos(this.angle)*this.size
-        this.y3 = this.location.y+Math.sin(this.angle)*this.size
+        this.x3 = this.location.x+Math.cos(this.angle)*this.size/2
+        this.y3 = this.location.y+Math.sin(this.angle)*this.size/2
         noStroke();
         //rotate(this.angle)
         triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3)
