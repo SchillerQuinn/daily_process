@@ -50,8 +50,9 @@ function deviceShaken() {
   all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
   all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
   all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
-  }//all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
-  //all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+  all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+  all_particles.addParticle(createVector(random(0,imgg.width*scale), random(0,imgg.height*scale)));
+ }
 }
 
 function mouseDragged() {
