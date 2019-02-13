@@ -11,7 +11,7 @@ let imgg,       //imag     //resized image of the image (visible)
     imageRatio;     //ratio of the image h/w
 
 function preload() {
-    imgNum = floor(random(1,33))
+    imgNum = floor(random(1,32))
     console.log(imgNum)
     imgg=loadImage(imgNum+".jpg");
 }
@@ -22,12 +22,11 @@ function setup() {
   shrink_rate = min(windowHeight/300, windowWidth/300);
   console.log(scale)
   canvas = createCanvas(imgg.width*scale, imgg.height*scale);
-  canvas.parent("sketch");
-  background(0);
+  //canvas.parent("sketch");
   imageMode(CENTER);
   noStroke();
-  background(255);
   imgg.loadPixels();
+  background(0);
   //let all_particles = new particleSystem();
 
   // button = createButton('click me');
@@ -105,10 +104,13 @@ function particleSystem() {
 class Particle {
   constructor(location) {
     this.location = createVector(location.x, location.y);
-    this.size = min(windowHeight/20, windowWidth/20);
+    var sizeScale = 10
+    this.isize = min(windowHeight/sizeScale, windowWidth/sizeScale);
+    this.size = min(windowHeight/sizeScale, windowWidth/sizeScale);
     this.velocity = createVector(0, 0);
     this.acc = createVector(0, 0);
     this.angle = 0.0
+    this.age = 0
 
     this.color = new colorGenerator(this.location);
   }
@@ -123,11 +125,12 @@ class Particle {
     this.velocity.limit(6);
     this.location.add(this.velocity);
     this.size = this.size*0.9-0.01
+    this.age ++
   }
 
   display() {
     this.color.update(this.location)
-    fill(this.color.R, this.color.G, this.color.B, 255-255*(this.size/min(windowHeight/20, windowWidth/20)));
+    fill(this.color.R, this.color.G, this.color.B, 255-255*(this.size/this.isize)**(1/3));
         this.x1 = this.location.x+Math.cos(this.angle+(2*Math.PI/3))*this.size/2
         this.y1 = this.location.y+Math.sin(this.angle+(2*Math.PI/3))*this.size/2
         this.x2 = this.location.x+Math.cos(this.angle+2*(2*Math.PI/3))*this.size/2
@@ -141,7 +144,7 @@ class Particle {
   }
 
   isDead() {
-    if (this.size < 0 ) {
+    if (this.age >30 ) {
       return true;
     } else {
       return false;
