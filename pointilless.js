@@ -11,13 +11,16 @@ let imgg,       //imag     //resized image of the image (visible)
     imageRatio;     //ratio of the image h/w
 
 function preload() {
-    imgg=loadImage("smallSarina3.jpg");
+    imgNum = floor(random(1,22))
+    console.log(imgNum)
+    imgg=loadImage(imgNum+".jpg");
 }
 
 
 function setup() {
-  scale =windowHeight/ imgg.height
-  shrink_rate = windowHeight/300;
+  scale =min(windowHeight/ imgg.height, windowWidth/ imgg.width)
+  shrink_rate = min(windowHeight/300, windowWidth/300);
+  console.log(scale)
   canvas = createCanvas(imgg.width*scale, imgg.height*scale);
   canvas.parent("sketch");
   background(0);
@@ -44,6 +47,13 @@ function mousePressed() {
     all_particles.addParticle(createVector(mouseX, mouseY));
   }
 }
+
+function mouseMoved() {
+  if (all_particles.count < max_particles) {
+    all_particles.addParticle(createVector(mouseX, mouseY));
+  }
+}
+
 
 function deviceShaken() {
   if (all_particles.count < max_particles) {
@@ -87,7 +97,7 @@ function particleSystem() {
 class Particle {
   constructor(location) {
     this.location = createVector(location.x, location.y);
-    this.size = windowHeight/20;
+    this.size = min(windowHeight/20, windowWidth/20);
     this.velocity = createVector(0, 0);
     this.acc = createVector(0, 0);
     this.angle = 0.0
@@ -104,12 +114,12 @@ class Particle {
     this.velocity.add(this.acc);
     this.velocity.limit(6);
     this.location.add(this.velocity);
-    this.size -= shrink_rate;
+    this.size = this.size*0.9-0.01
   }
 
   display() {
     this.color.update(this.location)
-    fill(this.color.R, this.color.G, this.color.B, 255 -(this.size)**(1.5) );
+    fill(this.color.R, this.color.G, this.color.B, 255-255*(this.size/min(windowHeight/20, windowWidth/20)));
     //fill(this.color.R, this.color.G, this.color.B, 255-this.size*3);
         this.x1 = this.location.x+Math.cos(this.angle+(2*Math.PI/3))*this.size/2
         this.y1 = this.location.y+Math.sin(this.angle+(2*Math.PI/3))*this.size/2
