@@ -12,6 +12,7 @@ let yOffset;
 let imgg, //imag     //resized image of the image (visible)
   imageRatio; //ratio of the image h/w
 let small = false;
+let big = false;
 let filll = false;
 var done = [];
 let lastSortLength = 0;
@@ -82,13 +83,14 @@ function keyTyped() {
     rerender()
   } else if (key === 'c') {
     clear();
-    //  background(0);
   } else if (key == 'r') {
     //lShade();
   } else if (key == 'p') {
     save('image.jpg');
   } else if (key == 's') {
     small = !small
+  } else if (key == 'b') {
+    big = !big
   } else if (key == 'f') {
     filll = !filll;
   }
@@ -191,7 +193,10 @@ class Particle {
     var sizeScale = 20
     this.isize = min(windowHeight / sizeScale, windowWidth / sizeScale);
     this.size = min(windowHeight / sizeScale, windowWidth / sizeScale);
-    if (small) {
+    if (big) {
+      this.size = this.size *3
+    }
+    else if (small) {
       this.size = this.size / 4
     } else {
       this.size = this.size / 2
