@@ -11,8 +11,8 @@ let yOffset;
 
 let imgg, //imag     //resized image of the image (visible)
   imageRatio; //ratio of the image h/w
-let small= false;
-let filll= false;
+let small = false;
+let filll = false;
 var done = [];
 let lastSortLength = 0;
 let canvas
@@ -68,9 +68,11 @@ function draw() {
       all_particles.addParticle(createVector(mouseX - xOffset, mouseY - yOffset));
     }
   }
-  if (filll){
-    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
-    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
+  if (filll) {
+    if (all_particles.count < max_particles) {
+      all_particles.addParticle(createVector(random() * imgg.width * scale - xOffset, random() * imgg.height * scale - yOffset));
+      all_particles.addParticle(createVector(random() * imgg.width * scale - xOffset, random() * imgg.height * scale - yOffset));
+    }
   }
   all_particles.update();
 }
@@ -85,11 +87,9 @@ function keyTyped() {
     //lShade();
   } else if (key == 'p') {
     save('image.jpg');
-  }
-  else if (key == 's'){
+  } else if (key == 's') {
     small = !small
-  }
-  else if (key == 'f'){
+  } else if (key == 'f') {
     filll = !filll;
   }
   return false;
@@ -191,11 +191,10 @@ class Particle {
     var sizeScale = 20
     this.isize = min(windowHeight / sizeScale, windowWidth / sizeScale);
     this.size = min(windowHeight / sizeScale, windowWidth / sizeScale);
-    if (small){
-      this.size =this.size/4
-    }
-    else{
-      this.size =this.size/2
+    if (small) {
+      this.size = this.size / 4
+    } else {
+      this.size = this.size / 2
     }
     this.velocity = createVector(0, 0);
     this.acc = createVector(0, 0);
