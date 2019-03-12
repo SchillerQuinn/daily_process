@@ -12,6 +12,7 @@ let yOffset;
 let imgg, //imag     //resized image of the image (visible)
   imageRatio; //ratio of the image h/w
 let small= false;
+let filll= false;
 var done = [];
 let lastSortLength = 0;
 let canvas
@@ -67,6 +68,10 @@ function draw() {
       all_particles.addParticle(createVector(mouseX - xOffset, mouseY - yOffset));
     }
   }
+  if (filll){
+    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
+    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
+  }
   all_particles.update();
 }
 
@@ -85,12 +90,7 @@ function keyTyped() {
     small = !small
   }
   else if (key == 'f'){
-    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
-    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
-    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
-    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
-    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
-    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
+    filll = !filll;
   }
   return false;
 }
