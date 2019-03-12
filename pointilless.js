@@ -11,7 +11,7 @@ let yOffset;
 
 let imgg, //imag     //resized image of the image (visible)
   imageRatio; //ratio of the image h/w
-
+let small= false;
 var done = [];
 let lastSortLength = 0;
 let canvas
@@ -25,7 +25,7 @@ function preload() {
 
 function setup() {
   fullscreen(true)
-  smooth() 
+  smooth()
   //scale =min(windowHeight/ imgg.height, windowWidth/ imgg.width)
   scale = 5
   shrink_rate = min(windowHeight / 300, windowWidth / 300);
@@ -80,6 +80,17 @@ function keyTyped() {
     //lShade();
   } else if (key == 'p') {
     save('image.jpg');
+  }
+  else if (key == 's'){
+    small = !small
+  }
+  else if (key == 'f'){
+    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
+    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
+    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
+    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
+    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
+    all_particles.addParticle(createVector(random()*imgg.width * scale - xOffset, random()*imgg.height * scale - yOffset));
   }
   return false;
 }
@@ -145,10 +156,6 @@ class Pointipoint {
   constructor(loc, sizee, ang, agee) {
     this.location = createVector(loc.x, loc.y);
     this.size = sizee
-    if (key === 's') {
-      this.size = this.size / 2
-    }
-    this.size = sizee
     this.angle = ang
     this.age = agee
     this.R = red(imgg.get(floor((this.location.x + xOffset) / scale), floor((this.location.y + yOffset) / scale)))
@@ -184,7 +191,10 @@ class Particle {
     var sizeScale = 20
     this.isize = min(windowHeight / sizeScale, windowWidth / sizeScale);
     this.size = min(windowHeight / sizeScale, windowWidth / sizeScale);
-    if (key == 's'){
+    if (small){
+      this.size =this.size/4
+    }
+    else{
       this.size =this.size/2
     }
     this.velocity = createVector(0, 0);
