@@ -14,6 +14,7 @@ let imgg, //imag     //resized image of the image (visible)
 
 var done = [];
 let lastSortLength = 0;
+let canvas
 
 function preload() {
   //imgNum = floor(random(1,32))
@@ -23,11 +24,14 @@ function preload() {
 
 
 function setup() {
+  fullscreen(true)
+  smooth() 
   //scale =min(windowHeight/ imgg.height, windowWidth/ imgg.width)
   scale = 5
   shrink_rate = min(windowHeight / 300, windowWidth / 300);
   canvas = createCanvas(imgg.width * scale, imgg.height * scale, WEBGL);
   //canvas.parent("sketch");
+  pixelDensity(3)
   xOffset = width / 2
   yOffset = height / 2
   ortho();
@@ -38,7 +42,7 @@ function setup() {
   //stroke('#222222');
   imgg.loadPixels();
   //image(imgg, 0, 0);
-  background(0);
+  //background(0);
 
   //let all_particles = new particleSystem();
 
@@ -56,7 +60,7 @@ function draw() {
   let locX = mouseX - (height / 2);
   let locY = mouseY - (width / 2);
   ambientLight(100, 100, 100);
- pointLight(250, 250, 250, locX, locY, 5);
+  pointLight(250, 250, 250, locX, locY, 5);
 
   if (mouseIsPressed) {
     if (all_particles.count < max_particles) {
@@ -71,12 +75,13 @@ function keyTyped() {
     rerender()
   } else if (key === 'c') {
     clear();
-    background(0);
-  } else if (key == 'r'){
-    lShade();
+    //  background(0);
+  } else if (key == 'r') {
+    //lShade();
+  } else if (key == 'p') {
+    save('image.jpg');
   }
-  // uncomment to prevent any default behavior
-  // return false;
+  return false;
 }
 
 
@@ -136,15 +141,15 @@ function lShade() {
 //   // uncomment to prevent any default behavior
 //   // return false;
 // }
-class Pointipoint{
-  constructor(loc, sizee, ang, agee){
+class Pointipoint {
+  constructor(loc, sizee, ang, agee) {
     this.location = createVector(loc.x, loc.y);
     this.size = sizee
     if (key === 's') {
-      this.size = this.size/2
+      this.size = this.size / 2
     }
     this.size = sizee
-    this.angle =ang
+    this.angle = ang
     this.age = agee
     this.R = red(imgg.get(floor((this.location.x + xOffset) / scale), floor((this.location.y + yOffset) / scale)))
     this.G = green(imgg.get(floor((this.location.x + xOffset) / scale), floor((this.location.y + yOffset) / scale)))
@@ -157,17 +162,17 @@ class Pointipoint{
     this.y3 = this.location.y + Math.sin(this.angle) * this.size / 2
   };
 
-  display(){
+  display() {
     fill(this.R, this.G, this.B) //, 255 - 255 * (this.size / this.isize) ** (1 / 3));
     triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3);
   }
 
-  lightShade(){
+  lightShade() {
     ambientMaterial(this.R, this.G, this.B) //, 255 - 255 * (this.size / this.isize) ** (1 / 3));
     triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3);
   }
 
-  getz(){
+  getz() {
     return this.age
   }
 }
@@ -179,6 +184,9 @@ class Particle {
     var sizeScale = 20
     this.isize = min(windowHeight / sizeScale, windowWidth / sizeScale);
     this.size = min(windowHeight / sizeScale, windowWidth / sizeScale);
+    if (key == 's'){
+      this.size =this.size/2
+    }
     this.velocity = createVector(0, 0);
     this.acc = createVector(0, 0);
     this.angle = 0.0
