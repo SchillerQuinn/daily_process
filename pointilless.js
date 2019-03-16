@@ -67,8 +67,8 @@ function preload() {
 function setup() {
   fullscreen(true)
   smooth()
-  //scale =min(windowHeight/ imgg.height, windowWidth/ imgg.width)
-  scale = 5
+  scale =min(windowHeight/ imgg.height, windowWidth/ imgg.width)
+  //scale = 5
   shrink_rate = min(windowHeight / 300, windowWidth / 300);
   canvas = createCanvas(imgg.width * scale, imgg.height * scale, WEBGL);
   //canvas.parent("sketch");
