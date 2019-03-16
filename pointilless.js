@@ -65,7 +65,7 @@ function preload() {
 }
 
 function setup() {
-  fullscreen(true)
+  //fullscreen(true)
   smooth()
   scale =min(windowHeight/ imgg.height, windowWidth/ imgg.width)
   //scale = 5
