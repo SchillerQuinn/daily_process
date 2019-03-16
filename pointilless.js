@@ -12,18 +12,57 @@ let yOffset;
 let imgg, //imag     //resized image of the image (visible)
   imageRatio; //ratio of the image h/w
 let small = false;
+let grid = false;
 let big = false;
 let filll = false;
+let sat = true;
+let alphaa = false;
+var K = 0.1;
+let A = 100;
+let colorfuckery = false;
 var done = [];
 let lastSortLength = 0;
 let canvas
+
+var x = Array(31).fill().map((_, i) => i);
+var y = Array(31).fill().map((_, i) => i);
+
+let combos = [] //or combos = new Array(2);
+
+for (var i = 0; i < x.length; i++) {
+  for (var j = 0; j < y.length; j++) {
+    combos.push([x[i], y[j]])
+  }
+}
+
+var shuffle = function(array) {
+
+  var currentIndex = array.length;
+  var temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+
+};
+combos = shuffle(combos)
+
 
 function preload() {
   //imgNum = floor(random(1,32))
   //imgg=loadImage(imgNum+".jpg");
   imgg = loadImage('Enzo.jpg')
 }
-
 
 function setup() {
   fullscreen(true)
@@ -71,12 +110,44 @@ function draw() {
   }
   if (filll) {
     if (all_particles.count < max_particles) {
-      all_particles.addParticle(createVector(random() * imgg.width * scale - xOffset, random() * imgg.height * scale - yOffset));
-      all_particles.addParticle(createVector(random() * imgg.width * scale - xOffset, random() * imgg.height * scale - yOffset));
+      if (grid) {
+        try {
+          var locc = combos.pop()
+          all_particles.addParticle(createVector(locc[0] / 30 * imgg.width * scale - xOffset, locc[1] / 30 * imgg.height * scale - yOffset));
+          var locc = combos.pop()
+          all_particles.addParticle(createVector(locc[0] / 30 * imgg.width * scale - xOffset, locc[1] / 30 * imgg.height * scale - yOffset));
+          var locc = combos.pop()
+          all_particles.addParticle(createVector(locc[0] / 30 * imgg.width * scale - xOffset, locc[1] / 30 * imgg.height * scale - yOffset));
+          var locc = combos.pop()
+          all_particles.addParticle(createVector(locc[0] / 30 * imgg.width * scale - xOffset, locc[1] / 30 * imgg.height * scale - yOffset));
+          var locc = combos.pop()
+          all_particles.addParticle(createVector(locc[0] / 30 * imgg.width * scale - xOffset, locc[1] / 30 * imgg.height * scale - yOffset));
+        }
+        catch(err){
+          var x = Array(31).fill().map((_, i) => i);
+          var y = Array(31).fill().map((_, i) => i);
+          combos = []
+          for (var i = 0; i < x.length; i++) {
+            for (var j = 0; j < y.length; j++) {
+              combos.push([x[i], y[j]])
+            }
+          }
+          combos = shuffle(combos)
+          //or combos = new Array(2);
+
+        }
+      } else {
+        all_particles.addParticle(createVector(random() * imgg.width * scale - xOffset, random() * imgg.height * scale - yOffset));
+        all_particles.addParticle(createVector(random() * imgg.width * scale - xOffset, random() * imgg.height * scale - yOffset));
+
+      }
     }
   }
   all_particles.update();
 }
+
+
+
 
 function keyTyped() {
   if (key === 'u') {
@@ -93,6 +164,19 @@ function keyTyped() {
     big = !big
   } else if (key == 'f') {
     filll = !filll;
+  } else if (key == 'a') {
+    colorfuckery = !colorfuckery
+  } else if (!isNaN(Number(key))) {
+    if (Number(key) <= 5) {
+      K = (Number(key) - 1) / 4
+    } else {
+      alphaa = 100 * ((Number(key) - 5) / 4)
+      if (A < 0) {
+        alphaa = 100
+      }
+    }
+  } else if (key == 'g') {
+    grid = !grid
   }
   return false;
 }
@@ -160,9 +244,24 @@ class Pointipoint {
     this.size = sizee
     this.angle = ang
     this.age = agee
-    this.R = red(imgg.get(floor((this.location.x + xOffset) / scale), floor((this.location.y + yOffset) / scale)))
-    this.G = green(imgg.get(floor((this.location.x + xOffset) / scale), floor((this.location.y + yOffset) / scale)))
-    this.B = blue(imgg.get(floor((this.location.x + xOffset) / scale), floor((this.location.y + yOffset) / scale)))
+    var rVal = red(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+    var gVal = green(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+    var bVal = blue(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+    if (colorfuckery) {
+      this.R = (random() * 30 - 60) + rVal
+      this.G = (random() * 30 - 60) + gVal
+      this.B = (random() * 30 - 60) + bVal
+    } else {
+      this.R = rVal
+      this.G = gVal
+      this.B = bVal
+    }
+    if (sat) {
+      var Intensity = 0.3 * rVal + 0.59 * gVal + 0.11 * bVal
+      this.R = Intensity * K + rVal * (1 - K)
+      this.G = Intensity * K + gVal * (1 - K)
+      this.B = Intensity * K + bVal * (1 - K)
+    }
     this.x1 = this.location.x + Math.cos(this.angle + (2 * Math.PI / 3)) * this.size / 2
     this.y1 = this.location.y + Math.sin(this.angle + (2 * Math.PI / 3)) * this.size / 2
     this.x2 = this.location.x + Math.cos(this.angle + 2 * (2 * Math.PI / 3)) * this.size / 2
@@ -172,7 +271,10 @@ class Pointipoint {
   };
 
   display() {
-    fill(this.R, this.G, this.B) //, 255 - 255 * (this.size / this.isize) ** (1 / 3));
+    //var coll= color('RGB('+this.R+','+this.G+','+this.B+','+alphaa+')')
+    var coll = color(this.R, this.G, this.B)
+    var coll = color(this.R, this.G, this.B, alphaa)
+    fill(coll) //, 255 - 255 * (this.size / this.isize) ** (1 / 3));
     triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3);
   }
 
@@ -194,9 +296,8 @@ class Particle {
     this.isize = min(windowHeight / sizeScale, windowWidth / sizeScale);
     this.size = min(windowHeight / sizeScale, windowWidth / sizeScale);
     if (big) {
-      this.size = this.size *3
-    }
-    else if (small) {
+      this.size = this.size * 3
+    } else if (small) {
       this.size = this.size / 4
     } else {
       this.size = this.size / 2
@@ -205,7 +306,7 @@ class Particle {
     this.acc = createVector(0, 0);
     this.angle = 0.0
     this.age = 0
-    this.color = new colorGenerator(this.location);
+    //this.color = new colorGenerator(this.location);
   }
 
   getz() {
@@ -248,9 +349,16 @@ class Particle {
 class colorGenerator {
   constructor(loc) {
     this.locc = loc
-    this.R = red(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
-    this.G = green(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
-    this.B = blue(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+    if (colorfuckery) {
+      this.R = (random() * 1.2 - 0.6) * red(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+      this.G = (random() * 1.2 - 0.6) * green(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+      this.B = (random() * 1.2 - 0.6) * blue(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+    } else {
+      this.R = red(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+      this.G = green(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+      this.B = blue(imgg.get(floor((loc.x + xOffset) / scale), floor((loc.y + yOffset) / scale)))
+
+    }
   }
 
   update(loc) {
